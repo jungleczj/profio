@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PortfolioLink | Resume Portfolio Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__content">
+          <nav class="nav" aria-label="Primary navigation">
+            <a class="brand" href="#top" aria-label="PortfolioLink home">
+              <span class="brand__mark">P</span>
+              <span>PortfolioLink</span>
+            </a>
+            <a class="nav__link" href="#how">How it works</a>
+          </nav>
+
+          <div class="hero__grid" id="top">
+            <div class="hero__copy">
+              <p class="eyebrow reveal delay-1">Turn scattered career materials into one shareable link</p>
+              <h1 class="reveal delay-2" id="hero-title">
+                Upload your resume and work samples.
+                <span class="text-highlight">We turn them into a portfolio link.</span>
+              </h1>
+              <p class="hero__lead reveal delay-3">
+                Add your email, resume, case studies, screenshots, certificates, or project documents.
+                We organize everything into a polished online portfolio and send the link to your inbox.
+              </p>
+              <div class="hero__actions reveal delay-4" aria-label="Service highlights">
+                <span>Job search ready</span>
+                <span>Multiple file types</span>
+                <span>Email delivery</span>
+              </div>
+            </div>
+
+            <form class="upload-panel spotlight-card reveal delay-3" id="portfolioForm" enctype="multipart/form-data">
+              <div class="panel__header">
+                <div>
+                  <p class="panel__label">Get started</p>
+                  <h2>Submit your materials</h2>
+                </div>
+                <span class="status-pill" id="statusPill">Waiting</span>
+              </div>
+
+              <label class="field">
+                <span>Full name</span>
+                <input
+                  id="fullName"
+                  name="fullName"
+                  type="text"
+                  placeholder="Jane Doe"
+                  autocomplete="name"
+                  required
+                />
+              </label>
+
+              <label class="field">
+                <span>Email</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </label>
+
+              <label class="field">
+                <span>Target role</span>
+                <select id="role" name="role">
+                  <option value="product">Product / Operations</option>
+                  <option value="design">Design / Creative</option>
+                  <option value="engineering">Engineering / Data</option>
+                  <option value="marketing">Marketing / Growth</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+
+              <div class="dropzone" id="dropzone">
+                <input
+                  id="materials"
+                  name="materials"
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg,.zip"
+                />
+                <div class="dropzone__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" role="img">
+                    <path
+                      d="M12 3v11m0-11 4 4m-4-4-4 4M5 14v4a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-4"
+                    />
+                  </svg>
+                </div>
+                <p>Drag files here, or click to browse</p>
+                <span>Resume, case studies, screenshots, certificates, up to 10 files</span>
+              </div>
+
+              <ul class="file-list" id="fileList" aria-live="polite"></ul>
+
+              <label class="field">
+                <span>Additional notes</span>
+                <textarea
+                  id="note"
+                  name="note"
+                  rows="3"
+                  placeholder="For example: highlight growth projects, B2B work, AI projects, or an English resume version"
+                ></textarea>
+              </label>
+
+              <button class="submit-btn" id="submitButton" type="submit">
+                <span id="submitText">Generate portfolio link</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14m-6-6 6 6-6 6" />
+                </svg>
+              </button>
+
+              <p class="form-note" id="formNote">
+                After submission, we will email your portfolio link to you.
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-band" aria-label="Portfolio preview">
+        <div class="portfolio-preview impact-preview reveal-on-scroll">
+          <div class="preview-orbit" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="preview-sidebar">
+            <span class="avatar">JL</span>
+            <strong>Jia Li</strong>
+            <small>Product Designer</small>
+            <div class="preview-meter">
+              <span></span>
+            </div>
+            <div class="impact-stats" aria-label="Portfolio impact metrics">
+              <div>
+                <strong>12</strong>
+                <span>case assets</span>
+              </div>
+              <div>
+                <strong>4.8x</strong>
+                <span>faster review</span>
+              </div>
+            </div>
+          </div>
+          <div class="preview-main">
+            <div class="preview-topline">
+              <span class="live-link">portfolio.link/jia-li</span>
+              <button type="button">Copy link</button>
+            </div>
+            <div class="showcase-window" aria-label="Generated portfolio showcase">
+              <div class="showcase-header">
+                <span>Featured project</span>
+                <strong>AI onboarding redesign that lifted activation by 38%</strong>
+              </div>
+              <div class="showcase-visual">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <div class="preview-columns">
+              <article>
+                <span>Resume</span>
+                <strong>Experience and skills, organized clearly</strong>
+              </article>
+              <article>
+                <span>Projects</span>
+                <strong>Three core project stories with outcomes</strong>
+              </article>
+              <article>
+                <span>Proof</span>
+                <strong>Certificates, media, and supporting materials</strong>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="steps" id="how" aria-labelledby="steps-title">
+        <div class="section-heading">
+          <p class="eyebrow">Three simple steps</p>
+          <h2 id="steps-title">From scattered files to a portfolio recruiters can open</h2>
+        </div>
+        <div class="steps__grid">
+          <article class="reveal-on-scroll">
+            <span>01</span>
+            <h3>Upload materials</h3>
+            <p>Submit your resume, project documents, screenshots, source files, or certificates.</p>
+          </article>
+          <article class="reveal-on-scroll">
+            <span>02</span>
+            <h3>We structure the story</h3>
+            <p>We organize your experience, project context, outcomes, and visual proof into a portfolio page.</p>
+          </article>
+          <article class="reveal-on-scroll">
+            <span>03</span>
+            <h3>Get the link by email</h3>
+            <p>Use the portfolio link in applications, referrals, social profiles, and direct outreach.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
