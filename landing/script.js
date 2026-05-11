@@ -117,14 +117,17 @@ form.addEventListener("submit", async (event) => {
       method: "POST",
       body: new FormData(form)
     });
-    const contentType = response.headers.get("content-type") || "";
+    const responseText = await response.text();
+    let result;
 
-    if (!contentType.includes("application/json")) {
-      const errorText = (await response.text()).trim();
-      throw new Error(errorText || "Submission failed. Please try again.");
+    try {
+      result = responseText ? JSON.parse(responseText) : {};
+    } catch {
+      throw new Error(
+        responseText.trim() ||
+          "The server returned an invalid response. Please check that /api/submissions is routed to the Node server."
+      );
     }
-
-    const result = await response.json();
 
     if (!response.ok) {
       throw new Error(result.error || "Submission failed. Please try again.");
