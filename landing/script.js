@@ -117,7 +117,17 @@ form.addEventListener("submit", async (event) => {
       method: "POST",
       body: new FormData(form)
     });
-    const result = await response.json();
+    const responseText = await response.text();
+    let result;
+
+    try {
+      result = responseText ? JSON.parse(responseText) : {};
+    } catch {
+      throw new Error(
+        responseText.trim() ||
+          "The server returned an invalid response. Please check that /api/submissions is routed to the Node server."
+      );
+    }
 
     if (!response.ok) {
       throw new Error(result.error || "Submission failed. Please try again.");
@@ -126,11 +136,7 @@ form.addEventListener("submit", async (event) => {
     statusPill.textContent = "Submitted";
     formNote.innerHTML = "";
 
-    const text = document.createTextNode(
-      result.emailSent
-        ? "Done. Your portfolio link has been sent to your email: "
-        : "Done. Your portfolio link is ready. Configure SMTP to send it by email automatically: "
-    );
+    const text = document.createTextNode("Done. Copy this portfolio link and send it to the user: ");
     const link = document.createElement("a");
 
     link.href = result.portfolioUrl;
