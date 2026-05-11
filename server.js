@@ -7,20 +7,13 @@ import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 import express from "express";
 import multer from "multer";
-import nodemailer from "nodemailer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const {
   APP_BASE_URL = "http://localhost:3000",
-  MAIL_FROM = "PortfolioLink <no-reply@example.com>",
   PORT = 3000,
-  SMTP_HOST,
-  SMTP_PASS,
-  SMTP_PORT = 587,
-  SMTP_SECURE = "false",
-  SMTP_USER,
   NEXT_PUBLIC_SUPABASE_URL,
   SUPABASE_SECRET_KEY,
   SUPABASE_SERVICE_ROLE_KEY,
@@ -74,19 +67,6 @@ const roleLabels = {
   other: "Other"
 };
 
-const emailTransport =
-  SMTP_HOST && SMTP_USER && SMTP_PASS
-    ? nodemailer.createTransport({
-        host: SMTP_HOST,
-        port: Number(SMTP_PORT),
-        secure: SMTP_SECURE === "true",
-        auth: {
-          user: SMTP_USER,
-          pass: SMTP_PASS
-        }
-      })
-    : null;
-
 app.use(express.static(path.join(__dirname, "landing")));
 app.use(express.urlencoded({ extended: false }));
 
@@ -115,29 +95,6 @@ const safePathSegment = (value) =>
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 120) || "unknown";
-
-const sendPortfolioEmail = async ({ email, portfolioUrl }) => {
-  if (!emailTransport) {
-    console.log(`Email transport is not configured. Portfolio link for ${email}: ${portfolioUrl}`);
-    return { sent: false, reason: "SMTP is not configured" };
-  }
-
-  await emailTransport.sendMail({
-    from: MAIL_FROM,
-    to: email,
-    subject: "Your portfolio link is ready",
-    text: `Your portfolio link is ready: ${portfolioUrl}`,
-    html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.7;color:#17202a">
-        <h2>Your portfolio link is ready</h2>
-        <p>You can view and share it here:</p>
-        <p><a href="${portfolioUrl}">${portfolioUrl}</a></p>
-      </div>
-    `
-  });
-
-  return { sent: true };
-};
 
 app.post("/api/submissions", upload.array("materials", 10), async (req, res) => {
   try {
@@ -214,12 +171,11 @@ app.post("/api/submissions", upload.array("materials", 10), async (req, res) => 
       throw filesError;
     }
 
-    const emailResult = await sendPortfolioEmail({ email, portfolioUrl });
+    console.log(`Portfolio link created for ${email}: ${portfolioUrl}`);
 
     return res.status(201).json({
       message: "Portfolio link created.",
-      portfolioUrl,
-      emailSent: emailResult.sent
+      portfolioUrl
     });
   } catch (error) {
     console.error(error);
@@ -232,6 +188,28 @@ app.post("/api/submissions", upload.array("materials", 10), async (req, res) => 
 
     return res.status(500).json({ error: "Submission failed. Please try again." });
   }
+});
+
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "API route not found." });
+});
+
+app.use("/api", (error, req, res, next) => {
+  console.error(error);
+
+  if (error instanceof multer.MulterError) {
+    const messages = {
+      LIMIT_FILE_SIZE: "Each file must be 25 MB or smaller.",
+      LIMIT_FILE_COUNT: "Please upload no more than 10 files.",
+      LIMIT_UNEXPECTED_FILE: "Please upload files using the materials field."
+    };
+
+    return res.status(400).json({
+      error: messages[error.code] || "Upload failed. Please check your files and try again."
+    });
+  }
+
+  return res.status(500).json({ error: "Submission failed. Please try again." });
 });
 
 app.get("/p/:slug", async (req, res) => {
